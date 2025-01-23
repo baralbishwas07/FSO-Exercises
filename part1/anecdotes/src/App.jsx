@@ -4,6 +4,10 @@ const Button = ({onClick,text}) => {
   return <button onClick={onClick}>{text}</button>
 }
 
+const DisplayVotes = ({votes,selected}) => {
+  return <p>has {votes[selected]} votes</p>
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -17,6 +21,13 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+  const setToVotes = () => {
+    const updatedVotes = [...votes]
+    updatedVotes[selected] += 1
+    setVotes(updatedVotes)
+  }
 
   const setToSelected = () => {
     const randomNumber = Math.floor(Math.random() * anecdotes.length)
@@ -26,6 +37,8 @@ const App = () => {
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <DisplayVotes votes={votes} selected={selected}/>
+      <Button onClick={setToVotes} text='vote'/>
       <Button onClick={setToSelected} text='next anecdote'/>
     </div>
   )
