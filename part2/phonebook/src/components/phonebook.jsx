@@ -1,3 +1,3 @@
-export const PhoneBook = ({name}) => {
-    return <p>{name}</p>
+export const PhoneBook = ({name, number}) => {
+    return <p>{name} {number}</p>
 }
