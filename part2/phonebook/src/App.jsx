@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { PhoneBook } from './components/phonebook'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -24,9 +26,9 @@ const App = () => {
         id: persons.length+1
       }
       setPersons(persons.concat(phoneObject))
-      setNewName('')
-      setNewNumber('')
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleNameChange = (event) => {
@@ -49,25 +51,22 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={showName} onChange={handleShowName}/>
-      </div>
+
+      <Filter showName={showName} handleNameChange={handleShowName}/>
+
       <h3>Add a new</h3>
-      <form onSubmit={addPhoneBook}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+
+      <PersonForm
+        addPhoneBook={addPhoneBook}
+        newName={newName}
+        handleNameChange={handleNameChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
+      />
+
       <h3>Numbers</h3>
-      {nameToShow.map(person => 
-        <PhoneBook key={person.id} name={person.name} number={person.number}/>
-      )}
+
+      <Persons nameToShow={nameToShow}/>
     </div>
   )
 }

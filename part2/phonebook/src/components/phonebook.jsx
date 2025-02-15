@@ -1,3 +1,5 @@
-export const PhoneBook = ({name, number}) => {
+const PhoneBook = ({name, number}) => {
     return <p>{name} {number}</p>
 }
+
+export default PhoneBook
