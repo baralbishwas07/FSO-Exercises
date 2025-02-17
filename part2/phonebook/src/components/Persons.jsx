@@ -1,10 +1,16 @@
 import PhoneBook from "./phonebook"
 
-const Persons = ({nameToShow}) => {
+const Persons = ({nameToShow, deletePhoneBook}) => {
     return (
         <div>
             {nameToShow.map(person => 
-                <PhoneBook key={person.id} name={person.name} number={person.number}/>
+                <PhoneBook 
+                    id={person.id}
+                    key={person.id} 
+                    name={person.name} 
+                    number={person.number}
+                    deletePhoneBook={deletePhoneBook}
+                />
             )}
         </div>
     )

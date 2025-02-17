@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": "2"
@@ -19,31 +14,6 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": "4"
-    },
-    {
-      "id": 5,
-      "name": "Ramesh Kumar",
-      "number": "093248093"
-    },
-    {
-      "id": 6,
-      "name": "Bishwas Baral",
-      "number": "2340928304"
-    },
-    {
-      "id": 7,
-      "name": "haha",
-      "number": "032948"
-    },
-    {
-      "id": 8,
-      "name": "hero gg",
-      "number": "09835233"
-    },
-    {
-      "id": 9,
-      "name": "sjafljdslaf",
-      "number": "234802398"
     }
   ]
 }
