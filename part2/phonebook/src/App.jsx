@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import phoneService from './services/phonebook'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -11,8 +11,10 @@ const App = () => {
   const [showName, setShowName] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then(response => {
-      setPersons(response.data)
+    phoneService
+    .getAll()
+    .then(phoneDetails => {
+      setPersons(phoneDetails)
     })
   }, []);
 
@@ -26,10 +28,10 @@ const App = () => {
         number: newNumber,
         id: persons.length+1
       }
-      axios
-      .post('http://localhost:3001/persons', phoneObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+      phoneService
+      .create(phoneObject)
+      .then(returnedDetails => {
+        setPersons(persons.concat(returnedDetails))
       })
     }
     setNewName('')
@@ -51,7 +53,6 @@ const App = () => {
   const nameToShow = showName 
   ? persons.filter(person => person.name.toLowerCase().includes(showName.toLowerCase())) 
   : persons
-
 
   return (
     <div>
