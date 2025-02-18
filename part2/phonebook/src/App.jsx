@@ -3,7 +3,6 @@ import phoneService from './services/phonebook'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import PhoneBook from './components/phonebook'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -22,7 +21,26 @@ const App = () => {
   const addPhoneBook = (event) => {
     event.preventDefault()
     if(persons.some(person => person.name === newName)){
-      alert(`${newName} is already added to phonebook`)
+      const existingPerson = persons.find(p => p.name === newName)
+      const choice = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if(choice){
+        const changedNumber = {...existingPerson, number: newNumber}
+
+        phoneService
+        .update(existingPerson.id, changedNumber)
+        .then(returnedDetails => {
+          setPersons(persons.map(p => p.id === existingPerson.id? returnedDetails : p))
+      })
+        .catch(error => {
+          alert(`Failed to update ${existingPerson.name}`, error.message)
+        })
+        phoneService
+        .getAll()
+        .then(data => {
+          setPersons(data)
+        })
+      }
+
     } else {
       const phoneObject = {
         name: newName,
@@ -48,7 +66,7 @@ const App = () => {
         setPersons(persons.filter(p => p.id !== id))
       })
       .catch(error => {
-        console.log(`Error deleting ${person.name}:`, error)
+        alert(`Error deleting ${person.name}:`, error.message)
       })
     } 
   }
