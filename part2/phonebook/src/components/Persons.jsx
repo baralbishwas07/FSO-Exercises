@@ -1,4 +1,4 @@
-import PhoneBook from "./phonebook"
+import PhoneBook from "./Phonebook"
 
 const Persons = ({nameToShow, deletePhoneBook}) => {
     return (
