@@ -3,12 +3,14 @@ import phoneService from './services/phonebook'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showName, setShowName] = useState('')
+  const [showNotification, setShowNotification] = useState(null)
 
   useEffect(() => {
     phoneService
@@ -30,6 +32,10 @@ const App = () => {
         .update(existingPerson.id, changedNumber)
         .then(returnedDetails => {
           setPersons(persons.map(p => p.id === existingPerson.id? returnedDetails : p))
+          setShowNotification(`Number changed for ${existingPerson.name}`)
+          setTimeout(() => {
+            setShowNotification(null)
+          }, 2000)
       })
         .catch(error => {
           alert(`Failed to update ${existingPerson.name}`, error.message)
@@ -50,6 +56,10 @@ const App = () => {
       .create(phoneObject)
       .then(returnedDetails => {
         setPersons(persons.concat(returnedDetails))
+        setShowNotification(`Added ${returnedDetails.name}`)
+        setTimeout(() => {
+          setShowNotification(null)
+        }, 2000)
       })
     }
     setNewName('')
@@ -64,6 +74,10 @@ const App = () => {
       .remove(id)
       .then(() => {
         setPersons(persons.filter(p => p.id !== id))
+        // setShowNotification(`Number changed for ${existingPerson.name}`)
+        //   setTimeout(() => {
+        //     setShowName(null)
+        //   }, 2000)
       })
       .catch(error => {
         alert(`Error deleting ${person.name}:`, error.message)
@@ -90,6 +104,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={showNotification}/>
 
       <Filter showName={showName} handleNameChange={handleShowName}/>
 
