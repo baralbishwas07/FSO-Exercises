@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import ShowCountry from './components/ShowCountry'
+import ShowCountries from './components/ShowCountries'
+import Weather from './components/Weather'
 
 const App = () => {
 
@@ -8,6 +10,22 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [showMessage, setShowMessage] = useState('')
   const [showCountry, setShowCountry] = useState(null)
+  const [weather, setWeather] = useState(null)
+
+  const api_key = import.meta.env.VITE_SOME_KEY
+
+  useEffect(() => {
+    if(showCountry){
+      axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${showCountry.capital}&appid=${api_key}&units=metric`)
+      .then(response => {
+        setWeather(response.data)
+      })
+      .catch(error => {
+        alert('Error fetching weather:', error.message)
+      })
+    }
+  }, [showCountry])
 
   useEffect(() => {
 
@@ -48,6 +66,11 @@ const App = () => {
     setValue(event.target.value)
   }
 
+  const handleShow = (country) => {
+    setShowCountry(country)
+    setWeather(null)
+  }
+
   return (
     <div>
       <form>
@@ -57,11 +80,12 @@ const App = () => {
       <p>{showMessage}</p>
 
       {showCountry ? (
-        <ShowCountry country={showCountry}/>
+        <div>
+          <ShowCountry country={showCountry}/>
+          <Weather country={showCountry} weather={weather}/>
+        </div>
       ) : (
-        countries.map(country => (
-          <p key={country.cca2}>{country.name.common}</p>
-        ))
+        <ShowCountries countries={countries} handleShow={handleShow}/>
       )}
 
     </div>
