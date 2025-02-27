@@ -39,7 +39,7 @@ const App = () => {
           setPersons(persons.map(p => p.id === existingPerson.id? returnedDetails : p))
       })
         .catch(error => {
-          setShowError(`Information of ${existingPerson.name} has already been removed from server`)
+          setShowError(error.response.data.error)
           handleErrorTimeout()
         })
         phoneService
@@ -97,7 +97,7 @@ const App = () => {
   const handleErrorTimeout = () => {
     setTimeout(() => {
       setShowError(null)
-    }, 2000)
+    }, 3000)
   }
 
   const handleNameChange = (event) => {
