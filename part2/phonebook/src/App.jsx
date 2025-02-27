@@ -34,17 +34,13 @@ const App = () => {
         .update(existingPerson.id, changedNumber)
         .then(returnedDetails => {
           setShowNotification(`Number changed for ${existingPerson.name}`)
-          setTimeout(() => {
-            setShowNotification(null)
-          }, 2000)
+          handleNotificationTimeout()
 
           setPersons(persons.map(p => p.id === existingPerson.id? returnedDetails : p))
       })
         .catch(error => {
           setShowError(`Information of ${existingPerson.name} has already been removed from server`)
-          setTimeout(() => {
-            setShowError(null)
-          }, 2000)
+          handleErrorTimeout()
         })
         phoneService
         .getAll()
@@ -62,11 +58,13 @@ const App = () => {
       .create(phoneObject)
       .then(returnedDetails => {
         setShowNotification(`Added ${returnedDetails.name}`)
-        setTimeout(() => {
-          setShowNotification(null)
-        }, 2000)
+        handleNotificationTimeout()
 
         setPersons(persons.concat(returnedDetails))
+      })
+      .catch(error => {
+        setShowError(error.response.data.error)
+        handleErrorTimeout()
       })
     }
     setNewName('')
@@ -81,15 +79,25 @@ const App = () => {
       .remove(id)
       .then(() => {
         setShowNotification(`Deleted ${person.name}`)
-        setTimeout(() => {
-          setShowNotification(null)
-        }, 2000)
+        handleNotificationTimeout()
         setPersons(persons.filter(p => p.id !== id))
       })
       .catch(error => {
         alert(`Error deleting ${person.name}:`, error.message)
       })
     } 
+  }
+
+  const handleNotificationTimeout = () => {
+    setTimeout(() => {
+      setShowNotification(null)
+    }, 2000)
+  }
+
+  const handleErrorTimeout = () => {
+    setTimeout(() => {
+      setShowError(null)
+    }, 2000)
   }
 
   const handleNameChange = (event) => {
