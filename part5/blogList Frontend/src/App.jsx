@@ -8,6 +8,11 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    author: '',
+    url: ''
+  })
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -17,7 +22,7 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if(loggedUserJSON) {
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -47,6 +52,27 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newBlog.title,
+      author: newBlog.author,
+      url: newBlog.url
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNewBlog({ title: '', author: '', url: '' })
+      })
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setNewBlog({ ...newBlog, [name]: value })
+  }
+
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
@@ -66,20 +92,40 @@ const App = () => {
 
   const renderBlog = () => (
     <div>
-      <h2>blogs</h2>
-      <p>{user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </p>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
     </div>
   )
 
+  const blogForm = () => (
+    <form onSubmit={addBlog}>
+      <div>
+        title:<input type='text' value={newBlog.title} name='title' onChange={handleInputChange} />
+      </div>
+      <div>
+        author:<input type='text' value={newBlog.author} name='author' onChange={handleInputChange} />
+      </div>
+      <div>
+        url:<input type='text' value={newBlog.url} name='url' onChange={handleInputChange} />
+      </div>
+      <button type='submit'>create</button>
+    </form>
+  )
+
   return (
     <div>
       {user === null ?
-        loginForm() : renderBlog()
+        loginForm() :
+        <div>
+          <h2>blogs</h2>
+          <p>{user.name} logged in
+            <button onClick={handleLogout}>logout</button>
+          </p>
+          <h2>create new</h2>
+          {blogForm()}
+          {renderBlog()}
+        </div>
       }
     </div>
   )
