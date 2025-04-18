@@ -84,6 +84,17 @@ const App = () => {
       })
   }
 
+  const updateBlog = (id, blogObject) => {
+    blogService
+      .update(id, blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      })
+      .catch(error => {
+        setShowError("Failed to update blog: ", error.message)
+      })
+  }
+
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
@@ -104,7 +115,7 @@ const App = () => {
   const renderBlog = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
       )}
     </div>
   )
