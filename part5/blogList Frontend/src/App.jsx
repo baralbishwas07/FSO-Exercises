@@ -93,12 +93,37 @@ const App = () => {
       })
       .catch(error => {
         setShowError("Failed to update blog: ", error.message)
+        handleErrorTimeout()
       })
   }
+
+  const deleteBlog = (blogToDelete) => {
+    const confirmDelete = window.confirm(
+      `Remove ${blogToDelete.title} by ${blogToDelete.author}?`
+    )
+
+    if (!confirmDelete) return
+
+    blogService
+      .remove(blogToDelete.id)
+      .then(() => {
+        setShowNotification(`Blog "${blogToDelete.title}" deleted successfully`)
+        handleNotificationTimeout()
+
+        const updatedBlogs = blogs.filter(blog => blog.id !== blogToDelete.id)
+        setBlogs(updatedBlogs)
+      })
+      .catch(error => {
+        setShowError(`Failed to delete "${blogToDelete.title}"` + error.response.data.error)
+        handleErrorTimeout()
+      })
+  }
+
 
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
+      {showError && <Error message={showError} />}
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -116,14 +141,14 @@ const App = () => {
   const renderBlog = () => (
     <div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} loggedUser={user}/>
       )}
     </div>
   )
 
   const blogForm = () => (
     <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-      <BlogForm createBlog={addBlog}/>
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   )
 
@@ -131,13 +156,13 @@ const App = () => {
     <div>
       {user === null ?
         <div>
-          <Error message={showError} />
           {loginForm()}
         </div>
         :
         <div>
           <h2>blogs</h2>
           <Notification message={showNotification} />
+          {showError && <Error message={showError} />}
           <p>{user.name} logged in
             <button onClick={handleLogout}>logout</button>
           </p>
