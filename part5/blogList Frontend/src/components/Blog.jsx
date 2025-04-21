@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, updateBlog, deleteBlog, loggedUser }) => {
 
@@ -35,7 +36,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, loggedUser }) => {
   }
 
   const showRemove = blog.user.username === loggedUser.username
-  
+
   return (
     <div style={blogStyle}>
       <div style={hideWhenVisible}>
@@ -48,10 +49,26 @@ const Blog = ({ blog, updateBlog, deleteBlog, loggedUser }) => {
         <div>{blog.url}</div>
         <div>{blog.likes} <button onClick={handleLike}>like</button></div>
         <div>{blog.user ? blog.user.username : 'Unknown user'}</div>
-        {showRemove && <button style={buttonStyle} onClick={() => deleteBlog(blog)}>remove</button>} 
+        {showRemove && <button style={buttonStyle} onClick={() => deleteBlog(blog)}>remove</button>}
       </div>
-    </div> 
+    </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string,
+    url: PropTypes.string,
+    likes: PropTypes.number,
+  }).isRequired,
+  updateBlog: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
+  loggedUser: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+    name: PropTypes.string
+  }).isRequired,
 }
 
 export default Blog

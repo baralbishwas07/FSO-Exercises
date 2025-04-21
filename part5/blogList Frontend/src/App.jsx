@@ -92,7 +92,7 @@ const App = () => {
         setBlogs(updatedBlog.sort((a, b) => b.likes - a.likes))
       })
       .catch(error => {
-        setShowError("Failed to update blog: ", error.message)
+        setShowError('Failed to update blog: ', error.message)
         handleErrorTimeout()
       })
   }
