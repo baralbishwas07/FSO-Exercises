@@ -18,13 +18,13 @@ const App = () => {
       )
 
       queryClient.setQueryData(['anecdotes'], updatedAnecdotes)
+      dispatch({ type: 'NOTIFICATION', payload: `You voted '${updatedAnecdote.content}'` })
+      setTimeout(() => dispatch({ type: 'CLEAR' }), 5000)
     }
   })
 
   const handleVote = (anecdote) => {
     updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
-    dispatch({ type: 'NOTIFICATION', payload: `You voted '${anecdote.content}'` })
-    setTimeout(() => dispatch({ type: 'CLEAR' }), 3000)
   }
 
   const result = useQuery({
